@@ -1,0 +1,30 @@
+<nav
+  class="flex h-[60px] w-full items-center justify-between border-b border-solid border-neutral-200 px-5"
+>
+  <div class="flex items-center gap-2">
+    <img
+      src="assets/images/logos/logo.png"
+      alt="Logo"
+      class="aspect-square w-[40px] object-contain object-center"
+    />
+    <p class="font-semi text-[16px] text-amber-700">Recaka POS</p>
+  </div>
+
+  <ul class="flex items-center gap-6 text-[11px] font-medium leading-[0px]">
+    <ng-container *ngFor="let menu of menuList">
+      <li
+        class="flex items-center gap-2  {{
+          menu.id === menuActive ? 'text-indigo-500' : 'text-neutral-500'
+        }}"
+        (click)="onRouter(menu.route)"
+      >
+        <svg-icon [src]="menu.icon" class="h-auto w-[14px]"></svg-icon>
+        <span>{{ menu.name }}</span>
+      </li>
+    </ng-container>
+  </ul>
+
+  <div class="flex gap-2">
+    <p class="text-[10px] font-normal text-neutral-900">Gemara</p>
+  </div>
+</nav>

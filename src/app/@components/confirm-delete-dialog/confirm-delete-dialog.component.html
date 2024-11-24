@@ -1,0 +1,62 @@
+<section
+  id="clear-all-modal"
+  class="fixed left-0 top-0 flex h-screen w-full items-center justify-center bg-black/50 duration-100 ease-linear transition-all {{
+    isShowModal ? 'opacity-100 z-50' : 'opacity-0 -z-10'
+  }}"
+>
+  <div class="w-[300px] overflow-hidden rounded-lg bg-white">
+    <div
+      class="relative flex w-full items-center justify-center pt-7 before:absolute before:z-20 before:aspect-square before:w-[40px] before:rounded-full before:bg-red-100 after:absolute after:z-10 after:aspect-square after:w-[50px] after:rounded-full after:bg-red-100/50"
+    >
+      <img
+        src="assets/images/icons/exclamation-circle.svg"
+        alt="Exclamation"
+        class="relative z-30 aspect-square w-[25px]"
+      />
+    </div>
+
+    <p
+      class="mt-8 w-full text-center text-[13px] font-semibold text-neutral-900"
+    >
+      Are You Sure?
+    </p>
+    <p
+      class="mt-2 w-full px-10 text-center text-[11px] font-medium text-neutral-700"
+    >
+      This action cannot be undone. Do you want to proceed?
+    </p>
+
+    <div
+      class="mt-5 flex h-[60px] w-full items-center justify-center gap-3 bg-neutral-100"
+    >
+      <button
+        type="button"
+        class="flex h-[30px] w-[120px] items-center justify-center gap-3 rounded bg-white shadow-md"
+        (click)="cancel()"
+      >
+        <img
+          src="assets/images/icons/x-mark.svg"
+          alt="Cancel"
+          class="w-[13px]"
+        />
+        <span class="text-[11px] font-normal leading-[0px] text-neutral-900"
+          >Cancel</span
+        >
+      </button>
+      <button
+        type="button"
+        class="flex h-[30px] w-[120px] items-center justify-center gap-3 rounded bg-red-500 shadow-md"
+        (click)="delete()"
+      >
+        <img
+          src="assets/images/icons/trash.svg"
+          alt="Cancel"
+          class="w-[13px]"
+        />
+        <span class="text-[11px] font-normal leading-[0px] text-white"
+          >Delete</span
+        >
+      </button>
+    </div>
+  </div>
+</section>

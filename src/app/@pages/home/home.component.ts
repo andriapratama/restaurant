@@ -1,10 +1,8 @@
+import { HomeService } from './home.service';
+import { NavbarComponent } from './../../@components/navbar/navbar.component';
+import { ConfirmDeleteDialogComponent } from './../../@components/confirm-delete-dialog/confirm-delete-dialog.component';
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  CUSTOM_ELEMENTS_SCHEMA,
-  OnInit,
-  ViewEncapsulation,
-} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { Product } from '../../@entities/product';
@@ -13,11 +11,14 @@ import { DummyDataService } from '../../@services/dummy-data.service';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ConfirmDeleteDialogComponent,
+    NavbarComponent,
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  encapsulation: ViewEncapsulation.None,
 })
 export class HomeComponent implements OnInit {
   public productList: Product[] = [];
@@ -29,14 +30,21 @@ export class HomeComponent implements OnInit {
   public categoryActive: string = 'all menu';
   public search: string = '';
   public isShowClearAllModal: boolean = false;
+  public isShowNoteModal: boolean = false;
+  public note: string = '';
+  public noteTmp: string = '';
+  public isShowOrderDetailModal: boolean = false;
 
-  constructor(public dummySvc: DummyDataService) {}
+  constructor(
+    public dummySvc: DummyDataService,
+    public homeSvc: HomeService,
+  ) {}
 
   async ngOnInit(): Promise<void> {
     this.productList = this.dummySvc.productList;
   }
 
-  public increaseAmount(product: Product) {
+  public onIncreaseAmount(product: Product) {
     const productIndex = this.productList.findIndex(
       (prod) => prod.id === product.id,
     );
@@ -55,7 +63,7 @@ export class HomeComponent implements OnInit {
     this.countSummary();
   }
 
-  public decreaseAmount(product: Product) {
+  public onDecreaseAmount(product: Product) {
     const productIndex = this.productList.findIndex(
       (prod) => prod.id === product.id,
     );
@@ -100,7 +108,7 @@ export class HomeComponent implements OnInit {
     return `Rp. ${newPrice}`;
   }
 
-  public clearAll() {
+  public onClearAll() {
     this.productSelected.map((product) => {
       const productIndex = this.productList.findIndex(
         (prod) => prod.id === product.id,
@@ -113,10 +121,12 @@ export class HomeComponent implements OnInit {
     this.tax = 0;
     this.discount = 0;
     this.totalAmount = 0;
+    this.note = '';
+    this.noteTmp = '';
     this.isShowClearAllModal = false;
   }
 
-  public selectCategory(category: string) {
+  public onSelectCategory(category: string) {
     this.categoryActive = category;
     this.search = '';
 
@@ -136,13 +146,37 @@ export class HomeComponent implements OnInit {
         product.name.toLowerCase().match(this.search),
       );
     } else {
-      this.selectCategory('all menu');
+      this.onSelectCategory('all menu');
     }
   }
 
-  public setShowClearAllModal() {
+  public onShowClearAllModal() {
     if (this.productSelected.length > 0) {
       this.isShowClearAllModal = !this.isShowClearAllModal;
     }
+  }
+
+  public onShowNoteModal() {
+    this.isShowNoteModal = !this.isShowNoteModal;
+    this.noteTmp = this.note;
+  }
+
+  public onNoteSubmit() {
+    this.isShowNoteModal = false;
+    this.note = this.noteTmp;
+  }
+
+  public onShowOrderDetailModal() {
+    if (this.productSelected.length > 0) {
+      this.isShowOrderDetailModal = !this.isShowOrderDetailModal;
+    }
+  }
+
+  public async onOrderSubmit(): Promise<void> {
+    await this.homeSvc.postOder();
+    setTimeout(() => {
+      this.isShowOrderDetailModal = !this.isShowOrderDetailModal;
+      this.onClearAll();
+    }, 3000);
   }
 }
